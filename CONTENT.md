@@ -10,7 +10,7 @@ This document governs the **artwork** contained in this repository. The source c
 
 All artworks in this repository (under `public/thumbs/` and, if present, `pixiv_downloads/`) were originally created and published by:
 
-> **焦茶 (Kogicha)** — Pixiv user ID `12845810`
+> **焦茶 (Kogacha)** — Pixiv user ID `12845810`
 > https://www.pixiv.net/users/12845810
 >
 > (Artist passed away in May 2021.)
@@ -29,7 +29,7 @@ No license is granted by this repository for the artwork itself. The author of t
 
 The following activities are undertaken by the site author for the purpose of this memorial:
 
-- **Display** of the artworks in reduced-resolution form (max 1200px on the long edge) within the gallery interface
+- **Display** of the artworks in reduced-resolution form (max 2400px on the long edge) within the gallery interface
 - **Reformatting** to web-optimized encodings (WebP) for bandwidth
 - **Cataloging** (titles, dates, Pixiv IDs) for navigation
 

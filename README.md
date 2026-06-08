@@ -1,9 +1,9 @@
 # あの夏ぼくは天使を見た — 焦茶 作品集
 
 > **あの夏ぼくは天使を見た**
-> 焦茶 (Kogicha, Pixiv 12845810) 作品集 / Memorial Gallery
+> 焦茶 (Kogacha, Pixiv 12845810) 作品集 / Memorial Gallery
 
-A non-commercial memorial gallery for **Kogicha** (焦茶), a Japanese illustrator who passed away in May 2021. The site presents 148 of their works in a quiet, flat, low-noise layout — designed to be browsed slowly.
+A non-commercial memorial gallery for **Kogacha** (焦茶), a Japanese illustrator who passed away in May 2021. The site presents 148 of their works in a quiet, flat, low-noise layout — designed to be browsed slowly.
 
 > [!NOTE]
 > **All artworks remain © 焦茶 / Pixiv 12845810. All rights reserved.**
@@ -29,7 +29,7 @@ The framework itself (Astro + view transitions + webp pipeline) is deliberately 
 | ------------ | --------------------------------- | ---------------------------------------------------------------- |
 | Framework    | [Astro 5](https://astro.build)    | Static, ships near-zero JS by default, easy to deploy anywhere   |
 | Transitions  | Web View Transitions API          | Native shared-element morph between thumbnail and viewer         |
-| Images       | `sharp` → WebP (480w + 1200w)     | ~40KB thumbs, ~120KB previews, originals never shipped           |
+| Images       | `sharp` → WebP (480w + 2400w)     | ~30KB thumbs, ~250KB previews, originals never shipped |
 | Deploy       | Any static host                   | GitHub Pages / Netlify / Cloudflare Pages all work               |
 
 ### Build pipeline
@@ -37,7 +37,7 @@ The framework itself (Astro + view transitions + webp pipeline) is deliberately 
 ```
 pixiv_downloads/                  ← source (NOT in git, ~GB of originals)
    ↓  scripts/scan-works.mjs
-public/thumbs/{id}/*.webp         ← 480w + 1200w derivatives
+public/thumbs/{id}/*.webp         ← 480w + 2400w derivatives
 src/data/works.json               ← manifest
    ↓  astro build
 dist/                             ← static site
@@ -76,7 +76,7 @@ The website author is **not** the rights holder of the artworks and therefore do
 
 ## Credits
 
-- **焦茶** (Kogicha, Pixiv 12845810) — for the work
+- **焦茶** (Kogacha, Pixiv 12845810) — for the work
 - Pixiv — original publication platform
 - Astro, sharp, Node.js — the boring reliable stack
 - The fan who built and maintains this site
