@@ -138,22 +138,6 @@
   opacity: 0.6;
 }
 
-.memorial__quote {
-  font-size: var(--t-md);
-  line-height: var(--lh-loose);
-  color: var(--fg);
-  font-style: normal;
-  margin-bottom: var(--gap-5);
-  letter-spacing: 0.04em;
-}
-
-.memorial__quote-cn {
-  font-size: var(--t-base);
-  line-height: var(--lh-loose);
-  color: var(--fg-muted);
-  margin-bottom: var(--gap-6);
-}
-
 .memorial__links {
   display: flex;
   gap: var(--gap-5);
