@@ -4,7 +4,7 @@
  *
  * 扫描 pixiv_downloads/焦茶_12845810/ 下的所有作品文件夹：
  *   1. 解析元数据
- *   2. 生成 webp 缩略图（thumb 480w / medium 1200w）到 public/thumbs/
+ *   2. 生成 webp 缩略图（thumb 480w / medium 2400w）到 public/thumbs/
  *   3. 探测原图宽高
  *   4. 写 src/data/works.json 与 src/content/works/*.md
  *
@@ -29,7 +29,7 @@ const IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif']);
 
 // 缩略图尺寸
 const THUMB_W = 480;   // 网格用
-const MEDIUM_W = 1200; // viewer 用
+const MEDIUM_W = 2400; // viewer 用（1080p×2 DPR 显示器 100vw 全宽不糊）
 
 function parseFolderName(name) {
   const m = name.match(/^(\d{4}-\d{2}-\d{2})_(\d+?)_(.+)$/);
@@ -58,19 +58,19 @@ async function processImage(srcAbs, outDir, baseName) {
     .webp({ quality: 78, effort: 4 })
     .toFile(thumbPath);
 
-  // medium.webp (1200w)，给 viewer 用
-  const mediumPath = join(outDir, `${baseName}@1200.webp`);
+  // medium.webp (2400w)，给 viewer 用
+  const mediumPath = join(outDir, `${baseName}@2400.webp`);
   await sharp(srcAbs)
     .rotate()
     .resize({ width: MEDIUM_W, withoutEnlargement: true })
-    .webp({ quality: 82, effort: 4 })
+    .webp({ quality: 84, effort: 4 })
     .toFile(mediumPath);
 
   return {
     width,
     height,
     thumb: `/thumbs/${basename(outDir)}/${baseName}.webp`,
-    medium: `/thumbs/${basename(outDir)}/${baseName}@1200.webp`,
+    medium: `/thumbs/${basename(outDir)}/${baseName}@2400.webp`,
   };
 }
 
@@ -130,7 +130,7 @@ async function main() {
         const m = await processImage(join(folderAbs, img), thumbDir, baseName);
         imageMeta.push({ src: img, ...m });
         totalThumbBytes += statSync(join(thumbDir, `${baseName}.webp`)).size;
-        totalMediumBytes += statSync(join(thumbDir, `${baseName}@1200.webp`)).size;
+        totalMediumBytes += statSync(join(thumbDir, `${baseName}@2400.webp`)).size;
         totalImgs++;
       } catch (err) {
         console.warn(`[scan] 处理失败: ${folder}/${img} — ${err.message}`);
