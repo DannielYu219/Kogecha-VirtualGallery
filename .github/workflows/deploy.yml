@@ -32,9 +32,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        # site / base 默认值写在 astro.config.mjs，这里不覆盖，
+        # 避免仓库级 vars 注入历史值（比如旧的 /Kogecha-VirtualGallery）。
         env:
           PUBLIC_SITE: ${{ vars.PUBLIC_SITE || 'https://dannielyu219.github.io' }}
-          PUBLIC_BASE: ${{ vars.PUBLIC_BASE || '/Kogecha-VirtualGallery' }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
