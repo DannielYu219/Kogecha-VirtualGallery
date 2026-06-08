@@ -15,7 +15,7 @@ import { withBase } from '../lib/paths';
 const flat = flatten(works);
 
 // 序列化为 window.__GALLERY__
-// 路径统一经过 withBase()，保证部署在 /Kogecha-VirtualGallery/ 子路径时也能正确解析
+// 路径统一经过 withBase()，保证部署在 /Kogacha-VirtualGallery/ 子路径时也能正确解析
 const galleryData = {
   works: works.map((w) => ({
     id: w.id,
