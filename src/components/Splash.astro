@@ -1,0 +1,107 @@
+---
+/**
+ * Splash.astro — 入场封面
+ *
+ * 一次性：sessionStorage 记录 'splash-dismissed' = '1'，
+ *   之后任何页面的 Splash 元素都立即被移除（首屏 <head> 内联脚本 + 此处
+ *   兜底），不再响应点击。意味着 View Transitions 形变回 / 时也不会再
+ *   叠层盖住画廊。
+ */
+interface Props {
+  title: string;
+  subtitle?: string;
+  enterLabel?: string;
+  /** 若提供则在淡出后跳转 */
+  href?: string;
+}
+
+const {
+  title,
+  subtitle,
+  enterLabel = 'クリックして開始',
+  href,
+} = Astro.props;
+---
+
+<div
+  class="splash anim-fade-in"
+  role="button"
+  tabindex="0"
+  aria-label="入場のスプラッシュ"
+  data-splash
+  data-href={href}
+>
+  <h1 class="splash__title text-jp">{title}</h1>
+  {subtitle && <p class="splash__sub text-jp">{subtitle}</p>}
+  <div class="splash__line" aria-hidden="true"></div>
+  <span class="splash__enter anim-pulse">{enterLabel}</span>
+</div>
+
+<script>
+  const FLAG = 'splash-dismissed';
+  const isDismissed = () => {
+    try {
+      return sessionStorage.getItem(FLAG) === '1';
+    } catch {
+      return false;
+    }
+  };
+  const markDismissed = () => {
+    try {
+      sessionStorage.setItem(FLAG, '1');
+    } catch {}
+    document.documentElement.setAttribute('data-splash-done', 'true');
+  };
+
+  // 已经被永久隐藏：直接清掉 DOM 元素并取消点击监听
+  if (isDismissed()) {
+    const old = document.querySelector('[data-splash]');
+    old?.remove();
+  }
+
+  const findSplash = () => document.querySelector<HTMLElement>('[data-splash]');
+
+  const dismiss = (splash: HTMLElement) => {
+    if (!splash || splash.classList.contains('is-out')) return;
+    markDismissed();
+    splash.classList.add('is-out');
+    const href = splash.dataset.href;
+    setTimeout(() => {
+      splash.remove();
+      if (href) location.href = href;
+    }, 480);
+  };
+
+  // —— 委托点击：document 级，命中 splash 区域即退场 ——
+  document.addEventListener(
+    'click',
+    (e) => {
+      if (isDismissed()) return; // 已隐藏就不再响应
+      const splash = findSplash();
+      if (!splash || splash.classList.contains('is-out')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      dismiss(splash);
+    },
+    { capture: true }
+  );
+
+  // —— 键盘可达 ——
+  document.addEventListener('keydown', (e) => {
+    if (isDismissed()) return;
+    const splash = findSplash();
+    if (!splash) return;
+    if (
+      (e.key === 'Enter' || e.key === ' ') &&
+      document.activeElement === splash
+    ) {
+      e.preventDefault();
+      dismiss(splash);
+    }
+  });
+</script>
+
+{/*
+  隐藏规则已挪到全局 components.css：html[data-splash-done] .splash { display:none }
+  原因：Astro scoped style 在组件级 :global() 包裹容易失效。
+*/}

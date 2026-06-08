@@ -1,0 +1,16 @@
+---
+/**
+ * YearDivider.astro — 年份分隔
+ */
+interface Props {
+  year: number;
+  count: number;
+}
+const { year, count } = Astro.props;
+---
+
+<header class="year-divider reveal">
+  <span class="year-divider__num text-jp">{year}</span>
+  <span class="year-divider__line" aria-hidden="true"></span>
+  <span class="year-divider__count">{count} 点</span>
+</header>

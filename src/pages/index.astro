@@ -1,0 +1,81 @@
+---
+/**
+ * index.astro — 主页
+ * splash → memorial → gallery
+ * 注入 window.__GALLERY__ 给 viewer 使用
+ */
+import Base from '../layouts/Base.astro';
+import Splash from '../components/Splash.astro';
+import Memorial from '../components/Memorial.astro';
+import Gallery from '../components/Gallery.astro';
+import Viewer from '../components/Viewer.astro';
+import { works, flatten } from '../lib/works';
+
+const flat = flatten(works);
+
+// 序列化为 window.__GALLERY__
+const galleryData = {
+  works: works.map((w) => ({
+    id: w.id,
+    folder: w.folder,
+    title: w.title,
+    date: w.date,
+    imageCount: w.imageCount,
+    images: w.images,
+    globalStartIndex: flat.findIndex((f) => f.work.id === w.id),
+  })),
+  flatSrc: flat.map((f) => f.medium),
+  flatThumb: flat.map((f) => f.thumb),
+  flatTitle: flat.map((f) => f.title),
+  flatWorkId: flat.map((f) => f.work.id),
+  flatWidth: flat.map((f) => f.width),
+  flatHeight: flat.map((f) => f.height),
+};
+---
+
+<Base showSplash={true}>
+  <!-- 注入数据 -->
+  <script is:inline define:vars={{ galleryData }}>
+    window.__GALLERY__ = galleryData;
+  </script>
+
+  <Splash title="あの夏ぼくは天使を見た" subtitle="焦茶 作品集 / Kogicha Memorial Gallery" />
+
+  <main id="main">
+    <Memorial />
+    <Gallery />
+  </main>
+
+  <footer class="site-footer">
+    <p>© 焦茶 / Pixiv 12845810 — 作品はご遺族および Pixiv の許諾のもとに展示しています。</p>
+    <p>本站为非商业纪念性质，原作版权归原作者所有。</p>
+  </footer>
+
+  <Viewer />
+</Base>
+
+<script>
+  // 滚动入场（IntersectionObserver）
+  const initReveal = () => {
+    const els = document.querySelectorAll<HTMLElement>('.reveal');
+    if (!els.length) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      els.forEach((el) => el.classList.add('is-in'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -8% 0px' }
+    );
+    els.forEach((el) => io.observe(el));
+  };
+  initReveal();
+  document.addEventListener('astro:page-load', initReveal);
+</script>

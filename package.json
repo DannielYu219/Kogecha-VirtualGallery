@@ -1,0 +1,28 @@
+{
+  "name": "kogicha-memorial-gallery",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "焦茶 — 記念ギャラリー / 焦茶纪念电子画廊",
+  "scripts": {
+    "scan": "node scripts/scan-works.mjs",
+    "predev": "npm run scan",
+    "prebuild": "npm run scan",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "node scripts/serve.mjs",
+    "astro:preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.16.18",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@fontsource/noto-serif-jp": "^5.1.1",
+    "@fontsource/noto-serif-sc": "^5.1.1",
+    "typescript": "^5.6.3"
+  }
+}

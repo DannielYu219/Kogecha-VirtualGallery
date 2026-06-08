@@ -1,0 +1,49 @@
+# build
+dist/
+.astro/
+
+# deps
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# env
+.env
+.env.production
+
+# os
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+
+# ─── THIS REPO ───────────────────────────────────────────────
+# Source images — NOT shipped. The repo only carries the
+# webp derivatives under public/thumbs/ which are rights-respectful
+# reduced-resolution copies.
+#
+# works.json and src/content/works/*.md ARE committed so the
+# site builds out of the box; re-running scan-works.mjs is
+# optional unless you want to refresh the manifest.
+pixiv_downloads/
+__pycache__/
+*.pyc
+
+# IDE / workspace artifacts
+.trae/
+
+# Local AI tooling config
+config/mcporter.json
+
+# Original prototype + zip
+prototype/
+Web-Prototype.zip
+
+# The downloader (operates on local-only paths)
+pixiv_downloader.py

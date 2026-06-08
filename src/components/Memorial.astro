@@ -1,0 +1,54 @@
+---
+/**
+ * Memorial.astro — In Memoriam 纪念文
+ * 焦茶 — 日本 Pixiv 插画师，2021 年 5 月离世
+ *
+ * 文案克制，无煽情套话。
+ * 标题 / 副文日文为主，中文辅助
+ */
+
+import { works } from '../lib/works';
+
+const totalWorks = works.length;
+const years = new Set(works.map((w) => w.year));
+const span = [...years].sort((a, b) => a - b);
+const spanText =
+  span.length > 1 ? `${span[0]}–${span[span.length - 1]}` : `${span[0]}`;
+---
+
+<section class="memorial reveal" aria-labelledby="memorial-title">
+  <div class="memorial__inner">
+    <p class="memorial__eyebrow">In Memoriam</p>
+    <h2 id="memorial-title" class="memorial__name text-jp">焦茶</h2>
+    <p class="memorial__name-kana text-jp">こがちゃ / Kogicha</p>
+    <p class="memorial__dates text-faint">1996 — 2021.5</p>
+
+    <div class="memorial__line" aria-hidden="true"></div>
+
+    <p class="memorial__quote text-jp">
+      優しい光が、画面の中にずっと残るように。
+    </p>
+    <p class="memorial__quote-cn text-cn">
+      愿温柔的光，永远留在画面之中。
+    </p>
+
+    <p class="text-faint" style="font-size: var(--t-sm); letter-spacing: var(--ls-base); margin-bottom: var(--gap-4);">
+      {totalWorks} 点の作品を所蔵 — 活動期間 {spanText}
+    </p>
+
+    <nav class="memorial__links" aria-label="外部リンク">
+      <a
+        class="memorial__link"
+        href="https://www.pixiv.net/users/12845810"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Pixiv 主页 ↗</a>
+      <a
+        class="memorial__link"
+        href="https://www.pixiv.net/users/12845810/bookmarks"
+        target="_blank"
+        rel="noopener noreferrer"
+      >收藏 / Bookmarks ↗</a>
+    </nav>
+  </div>
+</section>

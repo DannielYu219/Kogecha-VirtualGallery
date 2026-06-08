@@ -1,0 +1,58 @@
+---
+/**
+ * /works/[id] — 画作直链页
+ *
+ * 整个页面就是 viewer 浮层。
+ * 加载时 viewer.ts 读 URL 自动 openAt(此 ID)。
+ * 点击 viewer 的 ← 按钮直接 location.assign('/') 回到导航页，
+ * 不会停留在这页的"空画面 + 大标题"中间态。
+ */
+import Base from '../../layouts/Base.astro';
+import Viewer from '../../components/Viewer.astro';
+import { works, flatten, type Work } from '../../lib/works';
+
+export function getStaticPaths() {
+  return works.map((w) => ({ params: { id: w.id }, props: { work: w } }));
+}
+
+interface Props {
+  work: Work;
+}
+const { work } = Astro.props;
+const flat = flatten(works);
+
+const galleryData = {
+  works: works.map((w) => ({
+    id: w.id,
+    folder: w.folder,
+    title: w.title,
+    date: w.date,
+    imageCount: w.imageCount,
+    images: w.images,
+    globalStartIndex: flat.findIndex((f) => f.work.id === w.id),
+  })),
+  flatSrc: flat.map((f) => f.medium),
+  flatThumb: flat.map((f) => f.thumb),
+  flatTitle: flat.map((f) => f.title),
+  flatWorkId: flat.map((f) => f.work.id),
+  flatWidth: flat.map((f) => f.width),
+  flatHeight: flat.map((f) => f.height),
+};
+---
+
+<Base
+  title={`${work.title} — 焦茶`}
+  description={`${work.title} (${work.date})`}
+  showSplash={false}
+>
+  <script is:inline define:vars={{ galleryData }}>
+    window.__GALLERY__ = galleryData;
+  </script>
+
+  <Viewer
+    workId={work.id}
+    initialSrc={work.coverMedium || work.coverThumb}
+    initialTitle={work.title}
+    defaultOpen={true}
+  />
+</Base>

@@ -1,0 +1,98 @@
+/* =========================================================
+   animations.css — 关键帧 + 通用 utility
+   弹性克制动效
+   ========================================================= */
+
+/* —— 关键帧 —— */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rise-soft {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  0%   { opacity: 0; transform: scale(.94); }
+  60%  { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+/* —— Utility —— */
+.anim-fade-in {
+  animation: fade-in var(--dur-slow) var(--ease-out) both;
+}
+
+.anim-rise {
+  animation: rise var(--dur-slow) var(--ease-back) both;
+}
+
+.anim-pop {
+  animation: pop var(--dur-slow) var(--ease-spring) both;
+}
+
+.anim-pulse {
+  animation: pulse-soft 2.5s ease-in-out infinite;
+}
+
+/* —— 滚动入场：默认隐藏，由 IO 添加 .is-in 后再动 —— */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-back);
+  will-change: opacity, transform;
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 缩略图 hover 用弹性 */
+.thumb {
+  transition:
+    transform var(--dur-base) var(--ease-back),
+    opacity var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+  will-change: transform, opacity;
+}
+
+/* 圆形按钮 hover */
+.btn-icon {
+  transition:
+    background var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-back);
+}
+
+.btn-icon:hover {
+  transform: scale(1.06);
+}
+
+.btn-icon:active {
+  transform: scale(0.96);
+}

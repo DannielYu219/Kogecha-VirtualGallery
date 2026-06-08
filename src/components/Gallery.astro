@@ -1,0 +1,99 @@
+---
+/**
+ * Gallery.astro — 作品网格
+ * 使用 webp 缩略图（480w），带 width/height 防 CLS
+ * 点击触发 viewer（在 [id].astro 与 index.astro 内各自接管理）
+ */
+import { works, groupByYear, type Work } from '../lib/works';
+import YearDivider from './YearDivider.astro';
+
+interface Props {
+  /** 可选：仅渲染指定 id 列表 */
+  ids?: string[];
+  /** 视口以上立即加载的图片数（其余懒加载） */
+  eagerCount?: number;
+}
+
+const { ids, eagerCount = 8 } = Astro.props;
+const items: Work[] =
+  ids != null
+    ? ids
+        .map((id) => works.find((w) => w.id === id))
+        .filter((w): w is Work => Boolean(w))
+    : works;
+
+const grouped = groupByYear(items);
+
+// 展平用于 eager/lazy 判定
+let globalIdx = 0;
+---
+
+<section class="gallery gallery-wrap" aria-label="作品一覧">
+  {
+    [...grouped.entries()].map(([year, list]) => (
+      <div class="gallery__group" data-year={year}>
+        <YearDivider year={year} count={list.length} />
+        <div class="gallery__grid">
+          {list.map((w) => {
+            const isEager = globalIdx < eagerCount;
+            const cover = w.images[0];
+            const myIdx = globalIdx++;
+            // 固定 3:2 格子，用 object-fit: cover 填满
+            return (
+              <a
+                id={`work-${w.id}`}
+                class="gallery__item thumb"
+                href={`/works/${w.slug}/`}
+                data-id={w.id}
+                data-thumbnail
+                aria-label={`${w.title} — ${w.date}`}
+              >
+                <div class="gallery__img-wrap">
+                  {cover?.thumb ? (
+                    <img
+                      class="gallery__img"
+                      src={cover.thumb}
+                      alt={w.title}
+                      width={cover.width || 480}
+                      height={cover.height || 320}
+                      loading={isEager ? 'eager' : 'lazy'}
+                      decoding={isEager ? 'sync' : 'async'}
+                      fetchpriority={myIdx === 0 ? 'high' : 'auto'}
+                      transition:name={`work-${w.id}`}
+                    />
+                  ) : (
+                    <div class="gallery__img gallery__img--missing" aria-hidden="true" />
+                  )}
+                </div>
+                <div class="gallery__caption">
+                  <span class="gallery__title text-jp">{w.title}</span>
+                  <span class="gallery__date">{w.date.replace(/-/g, '.')}</span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<script>
+  // —— 缩略图淡入：图片 load 后给 .gallery__item 加 .is-loaded ——
+  const init = () => {
+    const items = document.querySelectorAll<HTMLAnchorElement>('.gallery__item');
+    items.forEach((item) => {
+      const img = item.querySelector('img');
+      if (!img) {
+        item.classList.add('is-loaded');
+        return;
+      }
+      const reveal = () => item.classList.add('is-loaded');
+      if (img.complete) reveal();
+      else img.addEventListener('load', reveal, { once: true });
+      img.addEventListener('error', reveal, { once: true });
+    });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

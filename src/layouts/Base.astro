@@ -1,0 +1,84 @@
+---
+/**
+ * Base.astro — 公共 layout
+ * 负责 <head>、字体、全局样式注入、ViewTransitions
+ */
+import '@fontsource/noto-serif-jp/300.css';
+import '@fontsource/noto-serif-jp/400.css';
+import '@fontsource/noto-serif-jp/200.css';
+import '@fontsource/noto-serif-sc/300.css';
+import '@fontsource/noto-serif-sc/400.css';
+
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/animations.css';
+import '../styles/components.css';
+
+import { ViewTransitions } from 'astro:transitions';
+import { works } from '../lib/works';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  showSplash?: boolean;
+  preloadImage?: string;
+}
+
+const {
+  title = '焦茶 — 記念ギャラリー',
+  description = '焦茶（Kogicha, 1996–2021）插画作品纪念画廊',
+  ogImage,
+  showSplash = true,
+  preloadImage,
+} = Astro.props;
+
+const firstCover = works[0]
+  ? works[0].coverThumb || `/works/${works[0].folder}/${works[0].cover}`
+  : '/favicon.svg';
+const finalOg = ogImage ?? firstCover;
+const finalPreload = preloadImage ?? firstCover;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={finalOg} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={finalOg} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href={finalPreload} fetchpriority="high" />
+
+    {/* 首屏之前同步检查 splash 是否已被永久隐藏（sessionStorage） */}
+    <script is:inline data-astro-rerun>
+      try {
+        if (sessionStorage.getItem('splash-dismissed') === '1') {
+          document.documentElement.setAttribute('data-splash-done', 'true');
+        } else {
+          document.documentElement.removeAttribute('data-splash-done');
+        }
+      } catch (_) {}
+    </script>
+
+    <ViewTransitions />
+  </head>
+
+  <body data-show-splash={showSplash ? 'true' : 'false'}>
+    <slot />
+  </body>
+</html>

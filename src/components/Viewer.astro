@@ -1,0 +1,59 @@
+---
+/**
+ * Viewer.astro — 全屏作品查看器
+ * 静态结构 + 客户端状态机（viewer.ts 接管）
+ *
+ * Props:
+ *  - workId         设置 transition:name 用于"画作 → 缩略图"共享元素形变
+ *  - initialSrc     首屏直链页（/works/[id]/）直接渲染该图，无需 JS 后置注入
+ *  - initialTitle   同上 alt
+ */
+interface Props {
+  workId?: string;
+  initialSrc?: string;
+  initialTitle?: string;
+  /** 首屏是否默认打开（深链页 = true） */
+  defaultOpen?: boolean;
+}
+
+const {
+  workId,
+  initialSrc,
+  initialTitle,
+  defaultOpen = false,
+} = Astro.props;
+
+const tn = workId ? `work-${workId}` : undefined;
+---
+
+<div
+  class={`viewer ${defaultOpen ? 'is-open' : ''}`}
+  data-viewer
+  data-default-open={defaultOpen ? 'true' : 'false'}
+  aria-modal="true"
+  role="dialog"
+  aria-label="作品ビューア"
+  aria-hidden={defaultOpen ? 'false' : 'true'}
+  tabindex="-1"
+>
+  <button class="viewer__btn viewer__btn--back btn-icon" data-viewer-back aria-label="ギャラリーへ戻る">←</button>
+  <button class="viewer__btn viewer__btn--prev btn-icon" data-viewer-prev aria-label="前の作品">‹</button>
+  <button class="viewer__btn viewer__btn--next btn-icon" data-viewer-next aria-label="次の作品">›</button>
+  <img
+    class="viewer__img"
+    data-viewer-img
+    alt={initialTitle || ''}
+    src={initialSrc}
+    transition:name={tn}
+  />
+  <div class="viewer__title text-jp" data-viewer-title>{initialTitle ?? ''}</div>
+  <div class="viewer__counter" data-viewer-counter></div>
+  <div class="viewer__credit">© 焦茶 / Pixiv 12845810</div>
+  <div class="viewer__loading" data-viewer-loading>読み込み中…</div>
+</div>
+
+<script>
+  import { initViewer } from '../scripts/viewer';
+  initViewer();
+  document.addEventListener('astro:page-load', () => initViewer());
+</script>
