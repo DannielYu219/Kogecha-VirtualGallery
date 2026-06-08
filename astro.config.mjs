@@ -1,8 +1,17 @@
 import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
+//
+// GitHub Pages 项目页路径：dannielyu219.github.io/Kogecha-VirtualGallery/
+// site + base 让 Astro 在构建期把 base 注入所有内部链接与静态资源引用。
+//
+// 如果将来绑定自定义域名（CNAME），把 site 改成新域名，base 改回 '/' 即可。
+const SITE = process.env.PUBLIC_SITE || 'https://dannielyu219.github.io';
+const BASE = process.env.PUBLIC_BASE || '/Kogecha-VirtualGallery';
+
 export default defineConfig({
-  site: 'https://kogicha-memorial.example',
+  site: SITE,
+  base: BASE,
   output: 'static',
   trailingSlash: 'ignore',
   build: {
@@ -31,5 +40,3 @@ export default defineConfig({
     },
   },
 });
-
-

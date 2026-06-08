@@ -15,6 +15,7 @@
  */
 
 import { navigate } from 'astro:transitions/client';
+import { withBase, BASE } from '../lib/paths';
 
 interface GalleryItem {
   id: string;
@@ -143,15 +144,21 @@ function openAt(idx: number) {
   markActive(workId);
 }
 
+/** 移除 base 前缀，拿到「相对路径」便于判断 */
+function stripBase(path: string): string {
+  if (BASE !== '/' && path.startsWith(BASE)) return path.slice(BASE.length - 1);
+  return path;
+}
+
 function close() {
   const viewer = $('[data-viewer]');
   if (!viewer || !STATE.open) return;
 
   // 画作页：软导航回 / 并带 #work-{id} 锚点，浏览器自动滚到该网格项
-  if (location.pathname.startsWith('/works/')) {
+  if (stripBase(location.pathname).startsWith('/works/')) {
     const target = STATE.currentWorkId
-      ? `/#work-${STATE.currentWorkId}`
-      : '/';
+      ? withBase(`/#work-${STATE.currentWorkId}`)
+      : withBase('/');
     navigate(target);
     return;
   }
@@ -191,7 +198,7 @@ function markActive(workId: string) {
 }
 
 function syncUrl(workId: string, push: boolean) {
-  if (location.pathname.startsWith('/works/')) return;
+  if (stripBase(location.pathname).startsWith('/works/')) return;
   const url = new URL(location.href);
   if (url.searchParams.get('v') === workId) return;
   url.searchParams.set('v', workId);
@@ -220,7 +227,7 @@ function handleThumbClick(e: MouseEvent) {
   }
 
   // 画作页中没画廊，此分支已不进入
-  if (location.pathname.startsWith('/works/')) {
+  if (stripBase(location.pathname).startsWith('/works/')) {
     e.preventDefault();
     openAt(indexOfId(anchor.dataset.id ?? ''));
   }
@@ -275,12 +282,13 @@ function bindUI() {
 
 function autoOpenFromUrl() {
   const url = new URL(location.href);
-  const pathId = location.pathname.startsWith('/works/')
+  const onWorksPage = stripBase(location.pathname).startsWith('/works/');
+  const pathId = onWorksPage
     ? location.pathname.split('/').filter(Boolean).pop() ?? ''
     : '';
   const v = url.searchParams.get('v') || pathId;
   if (!v) return;
-  if (location.pathname.startsWith('/works/') || url.searchParams.get('v')) {
+  if (onWorksPage || url.searchParams.get('v')) {
     openAt(indexOfId(v));
   }
 }

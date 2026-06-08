@@ -10,6 +10,7 @@
 import Base from '../../layouts/Base.astro';
 import Viewer from '../../components/Viewer.astro';
 import { works, flatten, type Work } from '../../lib/works';
+import { withBase } from '../../lib/paths';
 
 export function getStaticPaths() {
   return works.map((w) => ({ params: { id: w.id }, props: { work: w } }));
@@ -28,11 +29,17 @@ const galleryData = {
     title: w.title,
     date: w.date,
     imageCount: w.imageCount,
-    images: w.images,
+    images: w.images.map((img) => ({
+      thumb: withBase(img.thumb),
+      medium: withBase(img.medium),
+      width: img.width,
+      height: img.height,
+      aspect: img.aspect,
+    })),
     globalStartIndex: flat.findIndex((f) => f.work.id === w.id),
   })),
-  flatSrc: flat.map((f) => f.medium),
-  flatThumb: flat.map((f) => f.thumb),
+  flatSrc: flat.map((f) => withBase(f.medium)),
+  flatThumb: flat.map((f) => withBase(f.thumb)),
   flatTitle: flat.map((f) => f.title),
   flatWorkId: flat.map((f) => f.work.id),
   flatWidth: flat.map((f) => f.width),
@@ -51,7 +58,7 @@ const galleryData = {
 
   <Viewer
     workId={work.id}
-    initialSrc={work.coverMedium || work.coverThumb}
+    initialSrc={withBase(work.coverMedium || work.coverThumb)}
     initialTitle={work.title}
     defaultOpen={true}
   />

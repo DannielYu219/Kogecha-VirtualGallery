@@ -10,10 +10,12 @@ import Memorial from '../components/Memorial.astro';
 import Gallery from '../components/Gallery.astro';
 import Viewer from '../components/Viewer.astro';
 import { works, flatten } from '../lib/works';
+import { withBase } from '../lib/paths';
 
 const flat = flatten(works);
 
 // 序列化为 window.__GALLERY__
+// 路径统一经过 withBase()，保证部署在 /Kogecha-VirtualGallery/ 子路径时也能正确解析
 const galleryData = {
   works: works.map((w) => ({
     id: w.id,
@@ -21,11 +23,17 @@ const galleryData = {
     title: w.title,
     date: w.date,
     imageCount: w.imageCount,
-    images: w.images,
+    images: w.images.map((img) => ({
+      thumb: withBase(img.thumb),
+      medium: withBase(img.medium),
+      width: img.width,
+      height: img.height,
+      aspect: img.aspect,
+    })),
     globalStartIndex: flat.findIndex((f) => f.work.id === w.id),
   })),
-  flatSrc: flat.map((f) => f.medium),
-  flatThumb: flat.map((f) => f.thumb),
+  flatSrc: flat.map((f) => withBase(f.medium)),
+  flatThumb: flat.map((f) => withBase(f.thumb)),
   flatTitle: flat.map((f) => f.title),
   flatWorkId: flat.map((f) => f.work.id),
   flatWidth: flat.map((f) => f.width),

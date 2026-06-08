@@ -5,6 +5,7 @@
  * 点击触发 viewer（在 [id].astro 与 index.astro 内各自接管理）
  */
 import { works, groupByYear, type Work } from '../lib/works';
+import { withBase } from '../lib/paths';
 import YearDivider from './YearDivider.astro';
 
 interface Props {
@@ -43,7 +44,7 @@ let globalIdx = 0;
               <a
                 id={`work-${w.id}`}
                 class="gallery__item thumb"
-                href={`/works/${w.slug}/`}
+                href={withBase(`/works/${w.slug}/`)}
                 data-id={w.id}
                 data-thumbnail
                 aria-label={`${w.title} — ${w.date}`}
@@ -52,7 +53,7 @@ let globalIdx = 0;
                   {cover?.thumb ? (
                     <img
                       class="gallery__img"
-                      src={cover.thumb}
+                      src={withBase(cover.thumb)}
                       alt={w.title}
                       width={cover.width || 480}
                       height={cover.height || 320}

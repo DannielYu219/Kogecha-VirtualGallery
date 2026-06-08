@@ -16,6 +16,7 @@ import '../styles/components.css';
 
 import { ViewTransitions } from 'astro:transitions';
 import { works } from '../lib/works';
+import { withBase, BASE } from '../lib/paths';
 
 interface Props {
   title?: string;
@@ -36,8 +37,8 @@ const {
 const firstCover = works[0]
   ? works[0].coverThumb || `/works/${works[0].folder}/${works[0].cover}`
   : '/favicon.svg';
-const finalOg = ogImage ?? firstCover;
-const finalPreload = preloadImage ?? firstCover;
+const finalOg = ogImage ? withBase(ogImage) : withBase(firstCover);
+const finalPreload = preloadImage ? withBase(preloadImage) : finalOg;
 ---
 
 <!doctype html>
@@ -60,7 +61,8 @@ const finalPreload = preloadImage ?? firstCover;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={finalOg} />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <base href={BASE} />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" as="image" href={finalPreload} fetchpriority="high" />
 
