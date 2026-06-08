@@ -76,8 +76,15 @@ async function processImage(srcAbs, outDir, baseName) {
 
 async function main() {
   if (!existsSync(SRC_DIR)) {
-    console.error(`[scan] 找不到源目录: ${SRC_DIR}`);
-    process.exit(1);
+    // 源目录缺失：在 CI / 拉取新 clone 的场景下 manifest 和 thumbs 已随仓库携带，
+    // 这里优雅跳过而不是让 prebuild 失败。开发者本地想重建时可手动 `npm run scan`。
+    if (process.env.SCAN_STRICT === '1') {
+      console.error(`[scan] 找不到源目录: ${SRC_DIR}`);
+      process.exit(1);
+    }
+    console.log(`[scan] 源目录不存在，跳过扫描: ${SRC_DIR}`);
+    console.log(`[scan]   （使用仓库内已提交的 src/data/works.json + public/thumbs/）`);
+    return;
   }
 
   await mkdir(OUT_THUMBS_DIR, { recursive: true });
