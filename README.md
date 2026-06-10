@@ -6,8 +6,9 @@
 A non-commercial memorial gallery for **Kogacha** (焦茶), a Japanese illustrator who passed away in May 2021. The site presents 148 of their works in a quiet, flat, low-noise layout — designed to be browsed slowly.
 
 > [!NOTE]
-> **All artworks remain © 焦茶 / Pixiv 12845810. All rights reserved.**
-> The code framework is GPL-3.0. See [`LICENSE`](./LICENSE) and [`CONTENT.md`](./CONTENT.md) for the dual-licensing model.
+> **Code framework: GPL-3.0. Artworks: license pending — contact in progress with the rights holder.**
+> コードフレームワークは GPL-3.0。作品については現在ライセンス未定で、権利者と連絡中です。
+> See [`LICENSE`](./LICENSE) and [`CONTENT.md`](./CONTENT.md) for the full trilingual statement.
 
 ---
 
@@ -63,14 +64,18 @@ Node 20+ required. The custom preview server in `scripts/serve.mjs` is needed be
 
 ## License
 
-This repository is **dual-licensed**:
+This repository is **dual-scoped**: the code and the artworks are governed by different terms.
 
 | What                | License                              | See                            |
 | ------------------- | ------------------------------------ | ------------------------------ |
 | Source code         | **GPL-3.0** (or any later version)   | [`LICENSE`](./LICENSE)         |
-| Artwork (under `public/thumbs/`, `pixiv_downloads/`) | **© 焦茶 / Pixiv 12845810. All rights reserved.** | [`CONTENT.md`](./CONTENT.md)   |
+| Artwork (under `public/thumbs/`, `pixiv_downloads/`) | **Currently undetermined** — contact in progress with the rights holder. | [`CONTENT.md`](./CONTENT.md)   |
 
-The website author is **not** the rights holder of the artworks and therefore does not (and cannot) relicense them. The artworks are included solely for non-commercial memorial display. Any use beyond viewing in this site requires permission from the rights holders.
+🇨🇳  目前许可未定，正在联系中。
+🇯🇵  現在ライセンス未定、連絡中です。
+🇬🇧  License currently undetermined; contact in progress.
+
+Until a formal license is established, any use of the artworks beyond viewing on this site requires the rights holder's explicit permission. See [`CONTENT.md`](./CONTENT.md) for the full trilingual statement (中 / 日 / 英).
 
 ---
 
